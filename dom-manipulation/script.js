@@ -24,23 +24,55 @@ newQuoteForm.addEventListener('click', createAddQuoteForm)
 
 // Function to create a form to add new quotes
 function createAddQuoteForm() {
-  const formHtml = `
-    <form id="addQuoteForm">
-            <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-            <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-            <button onclick="addQuote()">Add Quote</button>
-    </form>
-  `;
-  const quoteDisplay = document.getElementById("formField");
-  quoteDisplay.innerHTML = formHtml;
+// Create form element
+const form = document.createElement('form');
+form.id = 'addQuoteForm';
 
-  const addQuoteForm = document.getElementById("addQuoteForm");
-  addQuoteForm.addEventListener("submit", (e) => {
+// Create input element for quote text
+const quoteTextInput = document.createElement('input');
+quoteTextInput.id = 'newQuoteText';
+quoteTextInput.type = 'text';
+quoteTextInput.placeholder = 'Enter a new quote';
+
+// Create input element for quote category
+const quoteCategoryInput = document.createElement('input');
+quoteCategoryInput.id = 'newQuoteCategory';
+quoteCategoryInput.type = 'text';
+quoteCategoryInput.placeholder = 'Enter quote category';
+
+// Create button element
+const addButton = document.createElement('button');
+addButton.textContent = 'Add Quote';
+addButton.id = addQuote;
+
+// Append elements to form
+form.appendChild(quoteTextInput);
+form.appendChild(quoteCategoryInput);
+form.appendChild(addButton);
+
+// Append form to body or a specific element
+document.getElementById('formField').appendChild(form);
+
+const quoteCount = document.getElementById('quoteCount');
+
+
+  
+  addButton.addEventListener("click", (e) => {
     e.preventDefault();
     const quoteText = document.getElementById("newQuoteText").value;
     const quoteCategory = document.getElementById("newQuoteCategory").value;
     quotes.push({ text: quoteText, category: quoteCategory });
+
+    document.getElementById("newQuoteText").value = "";
+    document.getElementById("newQuoteCategory").value = "";
+
+    const countQuotes = quotes.length;
+
+    quoteCount.innerHTML = countQuotes;
+    
   });
+
+
 }
 
 
@@ -56,4 +88,4 @@ function addQuote() {
 };
 
 // Display a random quote on page load
-setInterval(showRandomQuote, 3000)
+setInterval(showRandomQuote, 2000)
