@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,28 +11,16 @@
       border-left: 4px solid #ccc;
       padding: 10px;
     }
-    #notification {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #f0f0f0;
-      text-align: center;
-      padding: 10px;
-      display: none;
-    }
   </style>
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
-  <select id="categoryFilter"></select>
   <div id="quote-display"></div>
   <form id="add-quote-form">
     <input type="text" id="new-quote" placeholder="Enter a new quote">
     <input type="text" id="new-category" placeholder="Enter quote category">
     <button>Add Quote</button>
   </form>
-  <div id="notification"></div>
   <script src="script.js"></script>
 </body>
 </html>

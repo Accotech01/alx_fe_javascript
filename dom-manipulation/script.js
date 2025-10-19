@@ -1,6 +1,5 @@
 // Initialize quotes array
 let quotes = [];
-let lastSyncTime = null;
 
 // Load quotes from local storage
 function loadQuotes() {
@@ -25,7 +24,7 @@ async function fetchQuotesFromServer() {
     const serverQuotes = await response.json();
     return serverQuotes.map((quote) => ({
       quote: quote.title,
-      category: 'Server Quote',
+      category: quote.body,
     }));
   } catch (error) {
     console.error('Error fetching quotes from server:', error);
@@ -33,47 +32,31 @@ async function fetchQuotesFromServer() {
   }
 }
 
-// Sync local quotes with server quotes
-async function syncQuotes() {
-  const serverQuotes = await fetchQuotesFromServer();
-  const mergedQuotes = mergeQuotes(quotes, serverQuotes);
-  quotes = mergedQuotes;
-  saveQuotes();
-  displayQuotes();
-  notifyUser('Quotes synced with server');
+// Post quote to server
+async function postQuoteToServer(quote) {
+  try {
+    const response = await fetch(serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: quote.quote,
+        body: quote.category,
+      }),
+    });
+    const serverResponse = await response.json();
+    console.log('Quote posted to server:', serverResponse);
+  } catch (error) {
+    console.error('Error posting quote to server:', error);
+  }
 }
-
-// Merge local and server quotes
-function mergeQuotes(localQuotes, serverQuotes) {
-  const mergedQuotes = [...localQuotes];
-  serverQuotes.forEach((serverQuote) => {
-    const existingQuoteIndex = mergedQuotes.findIndex((quote) => quote.quote === serverQuote.quote);
-    if (existingQuoteIndex !== -1) {
-      mergedQuotes[existingQuoteIndex] = serverQuote;
-    } else {
-      mergedQuotes.push(serverQuote);
-    }
-  });
-  return mergedQuotes;
-}
-
-// Notify user of updates
-function notifyUser(message) {
-  const notificationElement = document.getElementById('notification');
-  notificationElement.textContent = message;
-  notificationElement.style.display = 'block';
-  setTimeout(() => {
-    notificationElement.style.display = 'none';
-  }, 3000);
-}
-
-// Periodic sync
-setInterval(syncQuotes, 60000); // Sync every 1 minute
 
 // Add quote to quotes array and save to local storage
 function addQuote(quote, category) {
   quotes.push({ quote, category });
   saveQuotes();
+  postQuoteToServer({ quote, category });
   displayQuotes();
 }
 
@@ -98,36 +81,10 @@ function displayQuotes(quotesToDisplay = quotes) {
   });
 }
 
-// Populate categories dynamically
-function populateCategories() {
-  const categories = [...new Set(quotes.map((quote) => quote.category))];
-  const categoryFilter = document.getElementById('categoryFilter');
-  categoryFilter.innerHTML = '';
-  const allOption = document.createElement('option');
-  allOption.value = 'all';
-  allOption.textContent = 'All Categories';
-  categoryFilter.appendChild(allOption);
-  categories.forEach((category) => {
-    const option = document.createElement('option');
-    option.value = category;
-    option.textContent = category;
-    categoryFilter.appendChild(option);
-  });
-}
-
-// Filter quotes based on selected category
-function filterQuotes() {
-  const selectedCategory = document.getElementById('categoryFilter').value;
-  const filteredQuotes = quotes.filter((quote) => selectedCategory === 'all' || quote.category === selectedCategory);
-  displayQuotes(filteredQuotes);
-}
-
 // Create add quote form event listener
 document.addEventListener('DOMContentLoaded', () => {
   loadQuotes();
   displayQuotes();
-  populateCategories();
-  syncQuotes();
 
   const addQuoteForm = document.getElementById('add-quote-form');
   addQuoteForm.addEventListener('submit', (e) => {
@@ -139,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('new-category').value = '';
   });
 
-  const categoryFilter = document.getElementById('categoryFilter');
-  categoryFilter.addEventListener('change', filterQuotes);
+  // Fetch quotes from server and display them
+  fetchQuotesFromServer().then((serverQuotes) => {
+    quotes = serverQuotes;
+    saveQuotes();
+    displayQuotes();
+  });
 });
