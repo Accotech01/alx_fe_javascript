@@ -59,8 +59,13 @@ async function syncQuotes() {
     quotes = serverQuotes;
     saveQuotes();
     displayQuotes();
-    console.log('Quotes synced with server');
+    alertQuotesSynced();
   }
+}
+
+// Alert quotes synced
+function alertQuotesSynced() {
+  alert('Quotes synced with server');
 }
 
 // Add quote to quotes array and save to local storage
