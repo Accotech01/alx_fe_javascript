@@ -1,3 +1,4 @@
+
 // Initialize quotes array
 let quotes = [];
 
@@ -33,12 +34,21 @@ function generateQuoteHTML(quote) {
   return blockquote;
 }
 
+// Display random quote
+function displayRandomQuote() {
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const randomQuote = quotes[randomIndex];
+  const quoteDisplay = document.getElementById('quote-display');
+  quoteDisplay.innerHTML = '';
+  quoteDisplay.appendChild(generateQuoteHTML(randomQuote));
+}
+
 // Display quotes
 function displayQuotes(quotesToDisplay = quotes) {
-  const quoteContainer = document.getElementById('quote-container');
-  quoteContainer.innerHTML = '';
+  const quoteDisplay = document.getElementById('quote-display');
+  quoteDisplay.innerHTML = '';
   quotesToDisplay.forEach((quote) => {
-    quoteContainer.appendChild(generateQuoteHTML(quote));
+    quoteDisplay.appendChild(generateQuoteHTML(quote));
   });
 }
 
@@ -117,4 +127,5 @@ document.addEventListener('DOMContentLoaded', () => {
   loadQuotes();
   displayQuotes();
   populateCategories();
+  displayRandomQuote();
 });

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,14 +15,14 @@
 <body>
   <h1>Dynamic Quote Generator</h1>
   <select id="categoryFilter" onchange="filterQuotes()"></select>
-  <div id="quote-container"></div>
+  <div id="quote-display"></div>
   <form id="add-quote-form">
     <input type="text" id="new-quote" placeholder="Enter a new quote">
     <input type="text" id="new-category" placeholder="Enter quote category">
     <button>Add Quote</button>
   </form>
   <input type="file" id="importFile" accept=".json">
-  <button id="export-btn">Export Quotes</button>
+  <button id="export-btn">Export to JSON</button>
   <script src="script.js"></script>
 </body>
 </html>
