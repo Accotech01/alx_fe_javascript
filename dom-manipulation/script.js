@@ -52,6 +52,14 @@ async function postQuoteToServer(quote) {
   }
 }
 
+// Sync quotes with server
+async function syncQuotes() {
+  const serverQuotes = await fetchQuotesFromServer();
+  quotes = serverQuotes;
+  saveQuotes();
+  displayQuotes();
+}
+
 // Add quote to quotes array and save to local storage
 function addQuote(quote, category) {
   quotes.push({ quote, category });
@@ -84,7 +92,7 @@ function displayQuotes(quotesToDisplay = quotes) {
 // Create add quote form event listener
 document.addEventListener('DOMContentLoaded', () => {
   loadQuotes();
-  displayQuotes();
+  syncQuotes();
 
   const addQuoteForm = document.getElementById('add-quote-form');
   addQuoteForm.addEventListener('submit', (e) => {
@@ -94,12 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     addQuote(newQuote, newCategory);
     document.getElementById('new-quote').value = '';
     document.getElementById('new-category').value = '';
-  });
-
-  // Fetch quotes from server and display them
-  fetchQuotesFromServer().then((serverQuotes) => {
-    quotes = serverQuotes;
-    saveQuotes();
-    displayQuotes();
+    syncQuotes();
   });
 });
