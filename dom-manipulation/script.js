@@ -55,9 +55,12 @@ async function postQuoteToServer(quote) {
 // Sync quotes with server
 async function syncQuotes() {
   const serverQuotes = await fetchQuotesFromServer();
-  quotes = serverQuotes;
-  saveQuotes();
-  displayQuotes();
+  if (JSON.stringify(serverQuotes) !== JSON.stringify(quotes)) {
+    quotes = serverQuotes;
+    saveQuotes();
+    displayQuotes();
+    console.log('Quotes synced with server');
+  }
 }
 
 // Add quote to quotes array and save to local storage
@@ -92,7 +95,10 @@ function displayQuotes(quotesToDisplay = quotes) {
 // Create add quote form event listener
 document.addEventListener('DOMContentLoaded', () => {
   loadQuotes();
+  displayQuotes();
   syncQuotes();
+
+  setInterval(syncQuotes, 30000); // Sync quotes every 30 seconds
 
   const addQuoteForm = document.getElementById('add-quote-form');
   addQuoteForm.addEventListener('submit', (e) => {
@@ -102,6 +108,5 @@ document.addEventListener('DOMContentLoaded', () => {
     addQuote(newQuote, newCategory);
     document.getElementById('new-quote').value = '';
     document.getElementById('new-category').value = '';
-    syncQuotes();
   });
 });
