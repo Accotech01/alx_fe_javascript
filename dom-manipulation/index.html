@@ -14,9 +14,18 @@
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
+  <select id="categoryFilter" onchange="filterQuotes()">
+    <option value="all">All Categories</option>
+    <!-- Dynamically populated categories -->
+  </select>
   <div id="quote-container"></div>
+  <form id="add-quote-form">
+    <input type="text" id="new-quote" placeholder="Enter a new quote">
+    <input type="text" id="new-category" placeholder="Enter quote category">
+    <button>Add Quote</button>
+  </form>
   <input type="file" id="importFile" accept=".json">
   <button id="export-btn">Export Quotes</button>
-  <script src="scripts.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
