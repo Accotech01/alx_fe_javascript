@@ -68,12 +68,8 @@ function populateCategories() {
 function filterQuotes() {
   const selectedCategory = document.getElementById('categoryFilter').value;
   localStorage.setItem('lastSelectedCategory', selectedCategory);
-  if (selectedCategory === 'all') {
-    displayQuotes();
-  } else {
-    const filteredQuotes = quotes.filter((quote) => quote.category === selectedCategory);
-    displayQuotes(filteredQuotes);
-  }
+  const filteredQuotes = quotes.filter((quote) => selectedCategory === 'all' || quote.category === selectedCategory);
+  displayQuotes(filteredQuotes);
 }
 
 // Create add quote form event listener
